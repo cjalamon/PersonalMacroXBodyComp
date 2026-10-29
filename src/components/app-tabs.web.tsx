@@ -1,115 +1,63 @@
-import {
-  Tabs,
-  TabList,
-  TabTrigger,
-  TabSlot,
-  TabTriggerSlotProps,
-  TabListProps,
-} from 'expo-router/ui';
-import { SymbolView } from 'expo-symbols';
-import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+// Web version of the bottom tab bar (used by `npm run web` in a browser).
+// The iPhone uses app-tabs.tsx instead. This one copies the Figma nav exactly,
+// which makes the web preview a handy way to check layouts on Windows.
 
-import { ExternalLink } from './external-link';
-import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
+import { Tabs, TabList, TabSlot, TabTrigger, TabTriggerSlotProps } from "expo-router/ui";
+import { ChartNoAxesCombined, LayoutDashboard, UserRound, Utensils } from "lucide-react-native";
+import type { LucideIcon } from "lucide-react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { colors, fonts, radius } from "@/theme";
+
+const TABS: { name: string; href: "/" | "/food" | "/progress" | "/you"; label: string; Icon: LucideIcon }[] = [
+  { name: "index", href: "/", label: "Today", Icon: LayoutDashboard },
+  { name: "food", href: "/food", label: "Food", Icon: Utensils },
+  { name: "progress", href: "/progress", label: "Progress", Icon: ChartNoAxesCombined },
+  { name: "you", href: "/you", label: "You", Icon: UserRound },
+];
 
 export default function AppTabs() {
   return (
-    <Tabs>
-      <TabSlot style={{ height: '100%' }} />
-      <TabList asChild>
-        <CustomTabList>
-          <TabTrigger name="home" href="/" asChild>
-            <TabButton>Home</TabButton>
+    <Tabs style={styles.root}>
+      <TabSlot style={styles.slot} />
+      <TabList style={styles.bar}>
+        {TABS.map(({ name, href, label, Icon }) => (
+          <TabTrigger key={name} name={name} href={href} asChild>
+            <TabButton label={label} Icon={Icon} />
           </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
-          </TabTrigger>
-        </CustomTabList>
+        ))}
       </TabList>
     </Tabs>
   );
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+function TabButton({ label, Icon, isFocused, ...props }: TabTriggerSlotProps & { label: string; Icon: LucideIcon }) {
   return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView
-        type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
-        style={styles.tabButtonView}>
-        <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
-          {children}
-        </ThemedText>
-      </ThemedView>
+    <Pressable {...props} style={styles.item}>
+      <View style={[styles.pill, isFocused && styles.pillSelected]}>
+        <Icon size={20} strokeWidth={1.7} color={isFocused ? colors.accentText : colors.muted} />
+      </View>
+      <Text style={[styles.label, isFocused && styles.labelSelected]}>{label}</Text>
     </Pressable>
   );
 }
 
-export function CustomTabList(props: TabListProps) {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
-
-  return (
-    <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
-        <ThemedText type="smallBold" style={styles.brandText}>
-          Expo Starter
-        </ThemedText>
-
-        {props.children}
-
-        <ExternalLink href="https://docs.expo.dev" asChild>
-          <Pressable style={styles.externalPressable}>
-            <ThemedText type="link">Docs</ThemedText>
-            <SymbolView
-              tintColor={colors.text}
-              name={{ ios: 'arrow.up.right.square', web: 'link' }}
-              size={12}
-            />
-          </Pressable>
-        </ExternalLink>
-      </ThemedView>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  tabListContainer: {
-    position: 'absolute',
-    width: '100%',
-    padding: Spacing.three,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+  root: { flex: 1 },
+  slot: { flex: 1 },
+  bar: {
+    flexDirection: "row",
+    gap: 12,
+    paddingTop: 14,
+    paddingBottom: 16,
+    paddingHorizontal: 22,
+    backgroundColor: colors.card,
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
   },
-  innerContainer: {
-    paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.five,
-    borderRadius: Spacing.five,
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexGrow: 1,
-    gap: Spacing.two,
-    maxWidth: MaxContentWidth,
-  },
-  brandText: {
-    marginRight: 'auto',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  tabButtonView: {
-    paddingVertical: Spacing.one,
-    paddingHorizontal: Spacing.three,
-    borderRadius: Spacing.three,
-  },
-  externalPressable: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: Spacing.one,
-    marginLeft: Spacing.three,
-  },
+  item: { flex: 1, alignItems: "center", gap: 5 },
+  pill: { width: 54, height: 28, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
+  pillSelected: { backgroundColor: colors.softGreen },
+  label: { fontFamily: fonts.medium, fontSize: 10, color: colors.muted },
+  labelSelected: { fontFamily: fonts.bold, color: colors.ink },
 });
