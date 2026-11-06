@@ -231,7 +231,9 @@ export default function TodayScreen() {
           )}
         </View>
       </View>
-
+      <Pressable onPress={() => addFood({ name: "Test apple", grams: 100, meal: "snack", macros: { calories: 52, protein: 0, carbs: 14, fat: 0 } })}>
+        <Text>Add test food</Text>
+      </Pressable>
       {/* Primary action */}
       <Pressable style={({ pressed }) => [styles.primaryButton, pressed && { opacity: 0.85 }]}>
         <Plus size={18} color={colors.ink} strokeWidth={2} />
