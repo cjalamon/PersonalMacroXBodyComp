@@ -12,6 +12,7 @@ import { EnergyRing } from "@/components/energy-ring";
 import { BottomTabInset } from "@/constants/theme";
 import { colors, fonts, radius, spacing, text } from "@/theme";
 import type { Activity, FoodEntry, Macros, Meal } from "@/types";
+import { useFoodLog } from "@/store/food-log";
 
 // ---- Fake data (delete once real data is wired in) ----
 const GOALS: Macros = { calories: 2400, protein: 180, carbs: 270, fat: 67 };
@@ -117,9 +118,8 @@ function MealRow({ label, Icon, foods }: { label: string; Icon: LucideIcon; food
 export default function TodayScreen() {
   const insets = useSafeAreaInsets();
   const [day, setDay] = useState<Date>(new Date());
-  const [foods] = useState<FoodEntry[]>(MOCK_FOODS);
+  const {foods, addFood, removeFood} = useFoodLog();
   const [activity] = useState<Activity>(MOCK_ACTIVITY);
-
   const totals = totalMacros(foods);
   const remaining = Math.max(GOALS.calories - totals.calories, 0);
   const isToday = isSameDay(day, new Date());

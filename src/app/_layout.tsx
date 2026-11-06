@@ -12,6 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
 import AppTabs from "@/components/app-tabs";
 import { colors } from "@/theme";
+import { FoodLogProvider } from "@/store/food-log";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,7 +35,9 @@ export default function RootLayout() {
     <ThemeProvider value={AppTheme}>
       <StatusBar style="dark" />
       <AnimatedSplashOverlay />
+      <FoodLogProvider>
       {fontsLoaded && <AppTabs />}
+      </FoodLogProvider>
     </ThemeProvider>
   );
 }
