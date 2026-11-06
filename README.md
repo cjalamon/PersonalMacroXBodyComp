@@ -8,3 +8,5 @@ Upcoming features:
 Will not be using AI features for the food since AI is redundant in regards to assuming food and their macros.
 
 - Might add a feature where if I ever have the money to buy a apple watch to have it track heart rate
+
+<img width="500" height="1000" alt="fapp-preview" src="https://github.com/user-attachments/assets/00c557e6-b824-4618-b2e0-88668e277480" />
