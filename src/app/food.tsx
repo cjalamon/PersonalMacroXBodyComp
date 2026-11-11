@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Search } from "lucide-react-native";
+import { Search, X } from "lucide-react-native";
 
 import { BottomTabInset } from "@/constants/theme";
 import { searchFoods, type FoodSearchResult } from "@/nutrition/usda";
@@ -29,11 +29,17 @@ export default function FoodScreen() {
       const found = await searchFoods(query);
       setResults(found);
     } catch {
+      setResults([]);
       setError("Search failed. Check your connection and try again.")
     } finally {
       setLoading(false);
     }
     
+  }
+  function clearSearch() {
+    setQuery("");
+    setResults([]);
+    setError(null);
   }
   return (
     <ScrollView
@@ -50,7 +56,6 @@ export default function FoodScreen() {
       </View>
 
       <View style={styles.searchBox}>
-        <Search size={18} color={colors.muted} strokeWidth={1.7} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search foods, e.g. banana"
@@ -61,6 +66,10 @@ export default function FoodScreen() {
           onChangeText = {setQuery}
           onSubmitEditing = {runSearch}
         />
+        <Pressable onPress = {clearSearch} hitSlop={10}>
+          <X size = {18} color = {colors.muted} strokeWidth = {1.7}/>
+        </Pressable>
+        <Search size={18} color={colors.muted} strokeWidth={1.7} />
       </View>
 
       {loading && <ActivityIndicator color={colors.accentText} />}

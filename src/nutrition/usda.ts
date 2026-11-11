@@ -30,7 +30,7 @@ export async function searchFoods(query: string): Promise<FoodSearchResult[]>{
 
     const url = 
     `${SEARCH_URL}?api_key=${API_KEY}&query=${encodeURIComponent(query)}` +
-    `&pageSize=15&dataType=Foundation,SR%20Legacy`;
+    `&pageSize=15&dataType=Foundation,SR%20Legacy, Branded`;
 
     const response = await fetch(url);
     if (response.ok === false){
